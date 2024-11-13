@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="w3-card-4 w3-margin-top w3-mobile" style="width: 75%;margin: auto;">
+    <div class="w3-container w3-theme">
+        <h2>{{wishlist[3]}} {{wishlist[2]}}</h2>
+    </div>
+    <div class="w3-container items">
+        <div class="row-items w3-card w3-padding">
+            <p class="w3-text-theme"><b>Name</b></p>
+            <p class="w3-text-theme"><b>Link</b></p>
+            <p class="w3-text-theme"><b>Price</b></p>
+            <p class="w3-text-theme"><b>Description</b></p>
+        </div>
+        {% for item in list_items %}
+        <div class="row-items w3-card w3-padding">
+            <p class="w3-text-theme">{{item[2]}}</p>
+            <a href="{{item[3]}}" target="_blank">Buy it here</a>
+            <p>Price: ${{item[4]}}</p>
+            <p>{{item[5]}}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

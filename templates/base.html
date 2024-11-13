@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-indigo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>{{title}}</title>
+</head>
+
+<body>
+    <header class="w3-bar w3-theme">
+        <a href="/" class="w3-bar-item w3-button w3-hover-none">Wishlist</a>
+        {% if session.username %}
+        <a href="{{ url_for('new_list') }}" class="w3-bar-item w3-button w3-hover-none">Create New List</a>
+        {% endif %}
+        <a href="{{ url_for('account') }}" class="w3-bar-item w3-button w3-right w3-hover-none"><i
+                class="fa fa-user"></i></a>
+    </header>
+    <div class="w3-container w3-margin-top">
+        {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+        <div class="w3-panel w3-theme-l3 w3-border">
+            <h3>Alert</h3>
+            <p>{{message}}</p>
+        </div>
+        {% endfor %}
+        {% endwith %}
+        {% block content %}
+        {% endblock content %}
+    </div>
+</body>
+
+</html>

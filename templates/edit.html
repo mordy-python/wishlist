@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="w3-card-4 w3-margin-top w3-mobile" style="width: 75%;margin: auto;">
+    <div class="w3-container w3-theme">
+        <h2>Edit {{list[1]}}</h2>
+    </div>
+    <form class="w3-container w3-mobile" method="post" autocomplete="off">
+        <input id="length" type="hidden" name="length" value="{{length(list_items)}}">
+        <input id="startingLength" type="hidden" name="startingLength" value="{{length(list_items)}}">
+        <div class="row w3-card w3-padding">
+            <div class="form-group">
+                <label for="emoji">Emoji</label>
+                <input class="row-item" type="text" name="emoji" value="{{list[2]}}">
+            </div>
+            <div class="form-group">
+                <label for="list-name">List Name</label>
+                <input class="row-item" type="text" name="list-name" value="{{list[1]}}">
+            </div>
+        </div>
+        {% for idx, item in enumerate(list_items) %}
+        <div class="row w3-card w3-padding w3-mobile">
+            <input type="hidden" name="item-id" value="{{item[0]}}">
+            <div class="form-group">
+                <label for="item-name">Item Name</label>
+                <input class='row-item' name="item-name-{{idx+1}}" value="{{item[2]}}">
+            </div>
+            <div class="form-group">
+                <label for="item-name">Item Link</label>
+                <input class='row-item' name="item-link-{{idx+1}}" value="{{item[3]}}">
+            </div>
+            <div class="form-group">
+                <label for="item-price">Item Price</label>
+                <input class='row-item' name="item-price-{{idx+1}}" value="{{item[4]}}">
+            </div>
+            <div class="form-group">
+                <label for="item-desc">Item Description</label>
+                <input class='row-item' name="item-description-{{idx+1}}" value="{{item[5]}}">
+            </div>
+        </div>
+        {% endfor %}
+        <div id="new-items"></div>
+        <div class="w3-margin-bottom">
+            <button type="submit" class="w3-btn w3-theme">Save Changes</button>
+            <button type="button" id="add-item" class="w3-btn w3-theme">Add Item</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById("add-item").addEventListener("click", function () {
+        var itemCount = parseInt(document.getElementById("length").value);
+        var newItemcount = itemCount + 1;
+        document.getElementById("length").value = newItemcount;
+
+        var newItemDiv = document.createElement("div");
+        newItemDiv.setAttribute('class', "row w3-card w3-padding");
+        newItemDiv.innerHTML = `
+            <div class="form-group">
+                <label for="item-name">Item Name</label>
+                <input class='row-item' name="item-name-${newItemcount}" required>
+            </div>
+            <div class="form-group">
+                <label for="item-name">Item Link</label>
+                <input class='row-item' name="item-link-${newItemcount}" required>
+            </div>
+            <div class="form-group">
+                <label for="item-price">Item Price</label>
+                <input class='row-item' name="item-price-${newItemcount}" required>
+            </div>
+            <div class="form-group">
+                <label for="item-desc">Item Description</label>
+                <input class='row-item' name="item-description-${newItemcount}" required>
+            </div>
+        `;
+
+        document.getElementById("new-items").appendChild(newItemDiv);
+    });
+</script>
+
+{% endblock content %}

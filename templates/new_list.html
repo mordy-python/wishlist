@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="w3-card-4 w3-margin-top w3-mobile" style="width: 50%;margin: auto;">
+    <div class="w3-container w3-theme">
+        <h2>Create A New List</h2>
+    </div>
+    <form class="w3-container" method="post">
+        <div class="row">
+            <p>Emoji <input type="text" name="emoji" style="width: 5ch;"></p>
+            <p>List Name <input name="list-name" type="text"></p>
+        </div>
+        <p>
+            <button class="w3-btn w3-theme">Create List</button>
+        </p>
+    </form>
+</div>
+{% endblock content %}

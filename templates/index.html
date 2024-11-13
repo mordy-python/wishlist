@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if not wishlists %}
+<h2>You have no wishlists, make one now!</h2>
+{% endif %}
+
+{% for list in wishlists %}
+<div class="w3-card w3-padding w3-margin-bottom w3-bar w3-mobile">
+    <h3 class="w3-bar-item w3-mobile">{{list.emoji}} <a href="{{ url_for('view', id=list.id) }}">{{list.name}}</a></h3>
+    <!-- <p class="w3-right w3-bar-item w3-theme-d1 w3-margin-left"
+        onclick="doShare('{{list.name}}', '{{list.emoji}}','{{list.id}}', '{{session.username}}')"><i
+            class="fa fa-share"></i>
+    </p> -->
+    <p class="w3-right w3-bar-item w3-theme w3-text-theme-d2"><a style="text-decoration: none;"
+            href="{{ url_for('edit', id=list.id) }}">+</a></p>
+    <p class="w3-right w3-bar-item">{{list.item_count}} items</p>
+</div>
+{%endfor %}
+
+<script>
+    async function doShare(name, emoji, id, username) {
+        share_params = {
+            title: name,
+            text: "Get " + username + " a gift from their wishlist!",
+            url: "https://localhost:500/view/" + id
+        }
+
+        try {
+            await navigator.share(share_params);
+            alert("Shared Data successfully");
+        } catch (err) {
+            alert(err)
+        }
+    }
+</script>
+
+{% endblock content %}

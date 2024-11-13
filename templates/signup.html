@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="w3-card-4 w3-margin-top w3-mobile" style="width: 50%;margin: auto;">
+    <div class="w3-container w3-theme">
+        <h2>Sign Up</h2>
+    </div>
+    <form class="w3-container" method="post" autocomplete="off">
+        <p>
+            <label class="w3-text-theme" for="username"><b>Username</b></label>
+            <input required class="w3-input w3-border w3-theme-l4" name="username" type="text">
+        </p>
+        <p>
+            <label class="w3-text-theme" for="password"><b>Password</b></label>
+            <input required class="w3-input w3-border w3-theme-l4" name="password" type="password">
+        </p>
+        <p>
+            <button class="w3-btn w3-theme">Sign Up</button>
+        </p>
+    </form>
+</div>
+<p class="w3-text-grey w3-center">Already have an account? <a href="{{ url_for('login') }}">Log in here</a></p>
+{% endblock content %}
