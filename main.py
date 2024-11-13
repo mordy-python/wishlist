@@ -326,6 +326,27 @@ def new_list():
     return render_template("new_list.html")
 
 
+@app.route(
+    "/delete/<id>",
+)
+@login_required
+def delete(id):
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+
+        query = "DELETE FROM lists WHERE id = %s"
+        cursor.execute(query, (id,))
+        conn.commit()
+    except mysql.connector.Error as err:
+        # Handle database errors
+        print(f"Error: {err}")
+    finally:
+        cursor.close()
+        conn.close()
+    return redirect(url_for("index"))
+
+
 @app.route("/account")
 @login_required
 def account():
