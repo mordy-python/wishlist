@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="w3-card-4 w3-margin-top w3-mobile" style="width: 75%;margin: auto;">
+<div class="w3-card-4 w3-margin-top w3-margin-bottom w3-mobile" style="width: 75%;margin: auto;">
     <div class="w3-container w3-theme">
         <h2>Edit {{list[1]}}</h2>
     </div>
@@ -20,7 +20,7 @@
         </div>
         {% for idx, item in enumerate(list_items) %}
         <div class="row w3-card w3-padding w3-mobile">
-            <input type="hidden" name="item-id" value="{{item[0]}}">
+            <input type="hidden" name="item-id-{{idx+1}}" value="{{item[0]}}">
             <div class="form-group">
                 <label for="item-name">Item Name</label>
                 <input class='row-item' name="item-name-{{idx+1}}" value="{{item[2]}}">

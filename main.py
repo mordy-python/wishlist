@@ -194,12 +194,13 @@ def edit(id):
                     price = request.form[f"item-price-{i}"]
                     desc = request.form[f"item-description-{i}"]
                     if i <= startLength:
-                        item_id = request.form["item-id"]
+                        item_id = request.form[f"item-id-{i}"]
                         updated_query = """
                             UPDATE list_items 
                             SET name = %s, url = %s, price = %s, description = %s
                             WHERE id = %s
                         """
+                        print(updated_query % (name, link, price, desc, item_id))
                         cursor.execute(
                             updated_query, (name, link, price, desc, item_id)
                         )
