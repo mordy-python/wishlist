@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="w3-card-4 w3-margin-top w3-margin-bottom w3-mobile" style="width: 75%;margin: auto;">
+<div class="w3-card-4 w3-margin-top w3-mobile" style="width: 75%;margin: auto;">
     <div class="w3-container w3-theme">
         <h2>Edit {{list[1]}}</h2>
     </div>
@@ -11,7 +11,7 @@
         <div class="row w3-card w3-padding">
             <div class="form-group">
                 <label for="emoji">Emoji</label>
-                <input class="row-item" type="text" name="emoji" value="{{list[2]}}">
+                <input class="row-item" type="text" name="emoji" value="{{decode(list[2])}}">
             </div>
             <div class="form-group">
                 <label for="list-name">List Name</label>
