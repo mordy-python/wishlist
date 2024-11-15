@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if not users %}
+<h2>No one has made an account</h2>
+{% endif %}
+
+{% for user in users %}
+<div class="w3-card w3-padding w3-margin-bottom w3-bar w3-mobile">
+    <h3 class="w3-bar-item w3-mobile">{{user.username}}</h3>
+    <p class="w3-right w3-bar-item w3-theme w3-text-theme-d2 w3-margin-left"><a style="text-decoration: none;"
+            href="{{ url_for('delete_user', id=user.id) }}"><i class="fa fa-trash"></i></a></p>
+    <p class="w3-right w3-bar-item">{{user.list_count}} lists</p>
+</div>
+{%endfor %}
+
+
+{% endblock content %}

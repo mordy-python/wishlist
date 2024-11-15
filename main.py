@@ -101,11 +101,39 @@ def get_lists():
 
         # Execute the query to get lists and their item counts
         query = """
-            SELECT lists.id, lists.name, lists.emoji, COUNT(list_items.id) AS item_count
+            SELECT lists.id, lists.name, lists.emoji, users.username, COUNT(list_items.id) AS item_count
             FROM lists
             LEFT JOIN list_items ON lists.id = list_items.list_id
-            JOIN users ON lists.user_id
+            JOIN users ON lists.user_id = users.id
             GROUP BY lists.id;
+        """
+        cursor.execute(query)
+
+        # Fetch all results
+        lists = cursor.fetchall()
+        return lists
+    except mysql.connector.Error as err:
+        # Handle database errors
+        print(f"Error: {err}")
+        return []
+    finally:
+        # Close the cursor and connection
+        cursor.close()
+        conn.close()
+
+
+def get_users():
+    try:
+        # Connect to the database
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)
+
+        # Execute the query to get lists and their item counts
+        query = """
+            SELECT users.username, users.id, COUNT(lists.id) AS list_count
+            FROM users
+            LEFT JOIN lists ON lists.user_id = users.id
+            GROUP BY users.id;
         """
         cursor.execute(query)
 
@@ -359,9 +387,7 @@ def new_list():
     return render_template("new_list.html")
 
 
-@app.route(
-    "/delete/<id>",
-)
+@app.route("/delete/<id>")
 @login_required
 def delete(id):
     try:
@@ -391,25 +417,59 @@ def account():
 @login_required
 def admin():
     if session["user_id"] != 4:
-        print(session["username"], "tried to access the admin page")
+        print(session["username"], "tried to access the admin page without permission")
         return redirect(url_for("index"))
 
     return render_template("admin/index.html", title="Admin Dashboard")
 
 
-@app.route("/admin/viewall")
-@app.route("/admin/viewall/")
+@app.route("/admin/viewlists")
+@app.route("/admin/viewlists/")
 @login_required
 def view_lists():
     if session["user_id"] != 4:
-        print(session["username"], "tried to access the admin page")
+        print(session["username"], "tried to access the admin page - view lists")
         return redirect(url_for("index"))
 
     wishlists = get_lists()
     print("Wishlists: ", wishlists)
     return render_template(
-        "admin/lists.html", title="Wishlist - View All", wishlists=wishlists
+        "admin/lists.html", title="Wishlist Admin - View Lists", wishlists=wishlists
     )
+
+
+@app.route("/admin/viewusers")
+@app.route("/admin/viewusers/")
+@login_required
+def view_users():
+    if session["user_id"] != 4:
+        print(session["username"], "tried to access the admin page - view users")
+        return redirect(url_for("index"))
+
+    users = get_users()
+    print("Users: ", users)
+    return render_template(
+        "admin/users.html", title="Wishlist Admin - View Users", users=users
+    )
+
+
+@app.route("/admin/delete/<id>")
+@login_required
+def delete_user(id):
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+
+        query = "DELETE FROM users WHERE id = %s"
+        cursor.execute(query, (id,))
+        conn.commit()
+    except mysql.connector.Error as err:
+        # Handle database errors
+        print(f"Error: {err}")
+    finally:
+        cursor.close()
+        conn.close()
+    return redirect(url_for("view_users"))
 
 
 if __name__ == "__main__":
