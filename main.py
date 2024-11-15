@@ -25,8 +25,11 @@ db_config = {
 
 
 @app.context_processor
-def length():
-    return dict(length=lambda x: len(x), enumerate=enumerate)
+def processor():
+    def emoji_decode(x):
+        return x.decode()
+
+    return dict(length=lambda x: len(x), decode=emoji_decode, enumerate=enumerate)
 
 
 def login_required(f):
@@ -76,6 +79,35 @@ def get_list_by_user(id):
             GROUP BY lists.id;
         """
         cursor.execute(query, (id,))
+
+        # Fetch all results
+        lists = cursor.fetchall()
+        return lists
+    except mysql.connector.Error as err:
+        # Handle database errors
+        print(f"Error: {err}")
+        return []
+    finally:
+        # Close the cursor and connection
+        cursor.close()
+        conn.close()
+
+
+def get_lists():
+    try:
+        # Connect to the database
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)
+
+        # Execute the query to get lists and their item counts
+        query = """
+            SELECT lists.id, lists.name, lists.emoji, COUNT(list_items.id) AS item_count
+            FROM lists
+            LEFT JOIN list_items ON lists.id = list_items.list_id
+            JOIN users ON lists.user_id
+            GROUP BY lists.id;
+        """
+        cursor.execute(query)
 
         # Fetch all results
         lists = cursor.fetchall()
@@ -184,7 +216,7 @@ def edit(id):
 
             cursor.execute(
                 "UPDATE lists SET name = %s, emoji = %s WHERE id = %s",
-                (request.form["list-name"], request.form["emoji"], id),
+                (request.form["list-name"], request.form["emoji"].encode(), id),
             )
             conn.commit()
             if length != 0:
@@ -313,7 +345,7 @@ def new_list():
 
             user_id = int(session["user_id"])
             name = request.form["list-name"]
-            emoji = request.form["emoji"]
+            emoji = request.form["emoji"].encode()
             query = "INSERT INTO lists  (user_id, name, emoji) VALUES (%s, %s, %s)"
             cursor.execute(query, (user_id, name, emoji))
             conn.commit()
@@ -352,6 +384,32 @@ def delete(id):
 @login_required
 def account():
     return render_template("account.html", title="Wishlist - Account")
+
+
+@app.route("/admin")
+@app.route("/admin/")
+@login_required
+def admin():
+    if session["user_id"] != 4:
+        print(session["username"], "tried to access the admin page")
+        return redirect(url_for("index"))
+
+    return render_template("admin/index.html", title="Admin Dashboard")
+
+
+@app.route("/admin/viewall")
+@app.route("/admin/viewall/")
+@login_required
+def view_lists():
+    if session["user_id"] != 4:
+        print(session["username"], "tried to access the admin page")
+        return redirect(url_for("index"))
+
+    wishlists = get_lists()
+    print("Wishlists: ", wishlists)
+    return render_template(
+        "admin/lists.html", title="Wishlist - View All", wishlists=wishlists
+    )
 
 
 if __name__ == "__main__":
