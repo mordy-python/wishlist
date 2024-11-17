@@ -359,7 +359,8 @@ def view(id):
         "view.html",
         wishlist=wishlist,
         list_items=list_items,
-        title=f"{wishlist[3]} {wishlist[2]}",
+        title=f"{wishlist[3].decode()} {wishlist[2]}",
+        list_id=id,
     )
 
 
@@ -470,6 +471,43 @@ def delete_user(id):
         cursor.close()
         conn.close()
     return redirect(url_for("view_users"))
+
+
+@app.route("/update_items", methods=["POST"])
+def update_items():
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+
+        form_data = request.form.to_dict()
+        list_id = int(form_data.pop("list_id"))
+
+        # Get all item ids from the relevant list
+        cursor.execute("select id from list_items where list_id = %s", (list_id,))
+        item_ids = {row[0] for row in cursor.fetchall()}
+        bought_item_ids = {
+            int(key.split("-")[1])
+            for key in form_data.keys()
+            if key.startswith("bought-")
+        }
+
+        for item_id in bought_item_ids:
+            query = "UPDATE list_items SET bought = 1 WHERE id = %s"
+            cursor.execute(query, (item_id,))
+
+        unchecked_item_ids = item_ids - bought_item_ids
+        for item_id in unchecked_item_ids:
+            query = "UPDATE list_items SET bought = 0 WHERE id = %s"
+            cursor.execute(query, (item_id,))
+
+        conn.commit()
+    except mysql.connector.Error as err:
+        # Handle database errors
+        print(f"Error: {err}")
+    finally:
+        cursor.close()
+        conn.close()
+    return redirect(url_for("view", id=list_id))
 
 
 if __name__ == "__main__":
