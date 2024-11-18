@@ -24,7 +24,6 @@ db_config = {
     "password": os.getenv("DB_PASS"),
     "database": os.getenv("DB_DB"),
 }
-print(db_config)
 
 
 @app.context_processor
