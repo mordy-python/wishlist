@@ -2,8 +2,9 @@
 {% block content %}
 
 <div class="w3-card-4 w3-margin-top responsive-form">
-    <div class="w3-container w3-theme">
+    <div class="w3-theme header-row">
         <h2>Edit {{list[1]}}</h2>
+        <button type="button" id="add-item" class="w3-btn w3-theme-l1">New Item</button>
     </div>
     <form class="w3-container w3-mobile" method="post" autocomplete="off" style="margin-top: 5px;">
         <input id="length" type="hidden" name="length" value="{{length(list_items)}}">
@@ -44,7 +45,6 @@
         <div id="new-items"></div>
         <div class="w3-margin-bottom">
             <button type="submit" class="w3-btn w3-theme">Save Changes</button>
-            <button type="button" id="add-item" class="w3-btn w3-theme">Add Item</button>
         </div>
     </form>
 </div>
