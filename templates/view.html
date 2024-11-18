@@ -22,7 +22,8 @@
                 {% for item in list_items %}
                 <tr class="{{'checked' if item[6] == 1 else 'unchecked'}}">
                     {% if item[6] == 1 %}
-                    <td><input class="checked" type="checkbox" name="bought-{{item[0]}}" id="bought-{{item[0]}}"
+                    <td>
+                        <input class="checked" type="checkbox" name="bought-{{item[0]}}" id="bought-{{item[0]}}"
                             checked>
                     </td>
                     {% else %}
@@ -59,8 +60,8 @@
                 <div class="accordion-body">
                     <div class="accordion-row">
                         <label>Bought
-                            <input type="checkbox" name="bought-{{item[0]}}" id="bought-{{item[0]}}" {% if item[6]==1
-                                %}checked{% endif %}></label>
+                            <input class="mobile-checkbox" type="checkbox" name="bought-{{item[0]}}"
+                                id="bought-{{item[0]}}" {% if item[6]==1 %}checked{% endif %}></label>
                     </div>
                     <div class="accordion-row">
                         <a href="{{item[3]}}" target="_blank">Buy it here</a>
@@ -91,6 +92,23 @@
                     content.style.display = "none";
                 } else {
                     content.style.display = "block";
+                }
+            });
+        });
+
+        const checkboxes = document.querySelectorAll("[type='checkbox']");
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener("change", async (event) => {
+                const id = parseInt(event.srcElement.id.split("-")[1]);
+                await fetch("/update_item/" + id, {
+                    method: "POST",
+                    body: checkbox.checked,
+                });
+                if (checkbox.classList.contains("mobile-checkbox")) {
+                    console.log("mobile checkbox")
+                    checkbox.parentElement.parentElement.parentElement.parentElement.classList.toggle("checked");
+                } else {
+                    checkbox.parentElement.parentElement.classList.toggle("checked");
                 }
             });
         });

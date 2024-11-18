@@ -516,5 +516,27 @@ def update_items():
     return redirect(url_for("view", id=list_id))
 
 
+@app.route("/update_item/<item_id>", methods=["POST"])
+def update_item(item_id):
+    try:
+        body = request.data.decode()
+        bought = 1 if body == "true" else 0
+
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+
+        query = "UPDATE list_items SET bought = %s WHERE id = %s"
+        cursor.execute(query, (bought, item_id))
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as err:
+        # Handle database errors
+        print(f"Error: {err}")
+
+    return "OK"
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
