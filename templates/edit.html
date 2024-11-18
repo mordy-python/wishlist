@@ -1,21 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="w3-card-4 w3-margin-top w3-mobile" style="width: 75%;margin: auto;">
+<div class="w3-card-4 w3-margin-top responsive-form">
     <div class="w3-container w3-theme">
         <h2>Edit {{list[1]}}</h2>
     </div>
-    <form class="w3-container w3-mobile" method="post" autocomplete="off">
+    <form class="w3-container w3-mobile" method="post" autocomplete="off" style="margin-top: 5px;">
         <input id="length" type="hidden" name="length" value="{{length(list_items)}}">
         <input id="startingLength" type="hidden" name="startingLength" value="{{length(list_items)}}">
         <div class="row w3-card w3-padding">
-            <div class="form-group">
+            <!-- <div class="row">
                 <label for="emoji">Emoji</label>
-                <input class="row-item" type="text" name="emoji" value="{{decode(list[2])}}">
-            </div>
-            <div class="form-group">
+                <input class="row-item" type="text" name="emoji" value="{{decode(list[2])}}" style="width: 4ch;">
                 <label for="list-name">List Name</label>
                 <input class="row-item" type="text" name="list-name" value="{{list[1]}}">
+            </div> -->
+            <div class="row">
+                <p>Emoji <input type="text" name="emoji" value="{{decode(list[2])}}" style="width: 5ch;"></p>
+                <p>List Name <input name="list-name" type="text" value="{{list[1]}}"></p>
             </div>
         </div>
         {% for idx, item in enumerate(list_items) %}
@@ -46,6 +48,7 @@
         </div>
     </form>
 </div>
+<br>
 
 <script>
     document.getElementById("add-item").addEventListener("click", function () {

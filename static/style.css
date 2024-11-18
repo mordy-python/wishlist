@@ -1,19 +1,30 @@
+.responsive-form {
+  box-sizing: border-box;
+  max-width: 95%;
+  margin: auto;
+}
+
 .row {
   display: flex;
-  gap: 5px;
-  margin: 10px 0;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
 .form-group {
-  width: 100%;
+  flex: 1 1 calc(50% - 16px);
+  display: flex;
+  flex-direction: column;
 }
 
 .row-items {
-  display: flex;
-  gap: 5px;
-  margin: 10px 0;
-  justify-content: space-between;
-  align-items: baseline;
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
 table {
@@ -67,6 +78,9 @@ tbody tr:last-of-type {
   }
   .mobile-accordion {
     display: block;
+  }
+  .responsive-form {
+    max-width: 600px !important;
   }
 }
 
