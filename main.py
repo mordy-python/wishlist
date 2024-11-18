@@ -86,15 +86,14 @@ def get_list_by_user(id):
 
         # Fetch all results
         lists = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
         return lists
     except mysql.connector.Error as err:
         # Handle database errors
         print(f"Error: {err}")
         return []
-    finally:
-        # Close the cursor and connection
-        cursor.close()
-        conn.close()
 
 
 def get_lists():
@@ -115,15 +114,14 @@ def get_lists():
 
         # Fetch all results
         lists = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
         return lists
     except mysql.connector.Error as err:
         # Handle database errors
         print(f"Error: {err}")
         return []
-    finally:
-        # Close the cursor and connection
-        cursor.close()
-        conn.close()
 
 
 def get_users():
@@ -143,15 +141,14 @@ def get_users():
 
         # Fetch all results
         lists = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
         return lists
     except mysql.connector.Error as err:
         # Handle database errors
         print(f"Error: {err}")
         return []
-    finally:
-        # Close the cursor and connection
-        cursor.close()
-        conn.close()
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -169,6 +166,9 @@ def login():
             cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
             user = cursor.fetchone()
 
+            cursor.close()
+            conn.close()
+
             if user:
                 session["user_id"] = user[0]
                 session["username"] = user[1]
@@ -182,9 +182,6 @@ def login():
         except Exception as e:
             print("ERRROR")
             print(e)
-        finally:
-            cursor.close()
-            conn.close()
 
     return render_template("login.html", title="Log In to Wishlist")
 
@@ -212,14 +209,14 @@ def signup():
             cursor.execute(query, (username, password))
 
             conn.commit()
+
+            cursor.close()
+            conn.close()
             flash("You have been signed up")
             return redirect(url_for("login"))
         except Exception as e:
             print("ERRROR")
             print(e)
-        finally:
-            cursor.close()
-            conn.close()
 
     return render_template("signup.html", title="Sign Up for Wishlist")
 
@@ -246,6 +243,9 @@ def edit(id):
                 (request.form["list-name"], request.form["emoji"].encode(), id),
             )
             conn.commit()
+            cursor.execute("select id from list_items where list_id = %s", (id,))
+            item_ids = {row[0] for row in cursor.fetchall()}
+
             if length != 0:
                 for i in range(1, length + 1):
                     name = request.form[f"item-name-{i}"]
@@ -254,12 +254,12 @@ def edit(id):
                     desc = request.form[f"item-description-{i}"]
                     if i <= startLength:
                         item_id = request.form[f"item-id-{i}"]
+                        item_ids.remove(int(item_id))
                         updated_query = """
                             UPDATE list_items
                             SET name = %s, url = %s, price = %s, description = %s
                             WHERE id = %s
                         """
-                        print(updated_query % (name, link, price, desc, item_id))
                         cursor.execute(
                             updated_query, (name, link, price, desc, item_id)
                         )
@@ -269,6 +269,9 @@ def edit(id):
                             VALUES (%s, %s, %s, %s, %s)
                         """
                         cursor.execute(insert_query, (id, name, link, price, desc))
+                for item_id in item_ids:
+                    query = """DELETE FROM list_items WHERE id = %s"""
+                    cursor.execute(query, (item_id,))
             else:
                 try:
                     for i in range(0, length + 1):
@@ -285,14 +288,14 @@ def edit(id):
                 except KeyError:
                     pass
             conn.commit()
+            cursor.close()
+            conn.close()
         except mysql.connector.Error as err:
             # Handle database errors
             print(f"Error: {err}")
         except Exception as err:
             raise err
-        finally:
-            cursor.close()
-            conn.close()
+
         return redirect(url_for("edit", id=id))
 
     try:
@@ -318,14 +321,14 @@ def edit(id):
         cursor.execute(query, (id,))
         list_items = cursor.fetchall()
 
+        cursor.close()
+        conn.close()
     except mysql.connector.Error as err:
         # Handle database errors
         print(f"Error: {err}")
         wishlist = None
         list_items = []
-    finally:
-        cursor.close()
-        conn.close()
+
     return render_template(
         "edit.html",
         list=wishlist,
@@ -350,13 +353,14 @@ def view(id):
         cursor.execute(query, (id,))
         list_items = cursor.fetchall()
         print(list_items)
+
+        cursor.close()
+        conn.close()
     except mysql.connector.Error as err:
         # Handle database errors
         print(f"Error: {err}")
         wishlist = None
-    finally:
-        cursor.close()
-        conn.close()
+
     return render_template(
         "view.html",
         wishlist=wishlist,
@@ -380,12 +384,13 @@ def new_list():
             query = "INSERT INTO lists  (user_id, name, emoji) VALUES (%s, %s, %s)"
             cursor.execute(query, (user_id, name, emoji))
             conn.commit()
+
+            cursor.close()
+            conn.close()
         except mysql.connector.Error as err:
             # Handle database errors
             print(f"Error: {err}")
-        finally:
-            cursor.close()
-            conn.close()
+
         return redirect(url_for("index"))
     return render_template("new_list.html")
 
@@ -400,12 +405,12 @@ def delete(id):
         query = "DELETE FROM lists WHERE id = %s"
         cursor.execute(query, (id,))
         conn.commit()
+
+        cursor.close()
+        conn.close()
     except mysql.connector.Error as err:
         # Handle database errors
         print(f"Error: {err}")
-    finally:
-        cursor.close()
-        conn.close()
     return redirect(url_for("index"))
 
 
@@ -466,12 +471,12 @@ def delete_user(id):
         query = "DELETE FROM users WHERE id = %s"
         cursor.execute(query, (id,))
         conn.commit()
+
+        cursor.close()
+        conn.close()
     except mysql.connector.Error as err:
         # Handle database errors
         print(f"Error: {err}")
-    finally:
-        cursor.close()
-        conn.close()
     return redirect(url_for("view_users"))
 
 
@@ -503,12 +508,11 @@ def update_items():
             cursor.execute(query, (item_id,))
 
         conn.commit()
+        cursor.close()
+        conn.close()
     except mysql.connector.Error as err:
         # Handle database errors
         print(f"Error: {err}")
-    finally:
-        cursor.close()
-        conn.close()
     return redirect(url_for("view", id=list_id))
 
 
