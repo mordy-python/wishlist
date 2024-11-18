@@ -77,9 +77,11 @@ def get_list_by_user(id):
             SELECT lists.id, lists.name, lists.emoji, COUNT(list_items.id) AS item_count
             FROM lists
             LEFT JOIN list_items ON lists.id = list_items.list_id
-            JOIN users ON lists.user_id = %s
+            JOIN users ON lists.user_id = users.id
+            WHERE user_id = %s
             GROUP BY lists.id;
         """
+
         cursor.execute(query, (id,))
 
         # Fetch all results
