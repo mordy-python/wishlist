@@ -14,7 +14,7 @@ import mysql.connector
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv(".env")
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -24,7 +24,7 @@ db_config = {
     "password": os.getenv("DB_PASS"),
     "database": os.getenv("DB_DB"),
 }
-
+print(db_config)
 
 @app.context_processor
 def processor():
@@ -258,7 +258,7 @@ def edit(id):
                     if i <= startLength:
                         item_id = request.form[f"item-id-{i}"]
                         updated_query = """
-                            UPDATE list_items 
+                            UPDATE list_items
                             SET name = %s, url = %s, price = %s, description = %s
                             WHERE id = %s
                         """
@@ -268,7 +268,7 @@ def edit(id):
                         )
                     else:
                         insert_query = """
-                            INSERT INTO list_items (list_id, name, url, price, description) 
+                            INSERT INTO list_items (list_id, name, url, price, description)
                             VALUES (%s, %s, %s, %s, %s)
                         """
                         cursor.execute(insert_query, (id, name, link, price, desc))
@@ -280,7 +280,7 @@ def edit(id):
                     price = request.form[f"item-price-{i}"]
                     desc = request.form[f"item-description-{i}"]
                     insert_query = """
-                        INSERT INTO list_items (list_id, name, url, price, description) 
+                        INSERT INTO list_items (list_id, name, url, price, description)
                         VALUES (%s, %s, %s, %s, %s)
                     """
                     cursor.execute(insert_query, (id, name, link, price, desc))
