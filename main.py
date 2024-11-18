@@ -26,6 +26,7 @@ db_config = {
 }
 print(db_config)
 
+
 @app.context_processor
 def processor():
     def emoji_decode(x):
