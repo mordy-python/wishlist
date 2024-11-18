@@ -18,19 +18,19 @@
             href="{{ url_for('edit', id=list.id) }}">+</a></p>
     <p class="w3-right w3-bar-item">{{list.item_count}} items</p>
 </div>
-{%endfor %}
+{% endfor %}
 
 <script>
     async function doShare(name, emoji, id, username) {
         share_params = {
             title: name,
             text: "Get " + username + " a gift from their wishlist!",
-            url: "https://localhost:500/view/" + id
+            url: "https://wishlist.pythonanywhere.com/view" + id
         }
 
         try {
             await navigator.share(share_params);
-            alert("Shared Data successfully");
+            console.log("Shared Data successfully");
         } catch (err) {
             alert(err)
         }
