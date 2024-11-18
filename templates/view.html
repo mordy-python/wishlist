@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="w3-card-4 w3-margin-top w3-mobile" style="width: 75%;margin: auto;">
+<div class="w3-card-4 w3-margin-top desktop-table" style="width: 75%;margin: auto;">
     <form action="{{ url_for('update_items') }}" method="post">
         <input type="hidden" value="{{list_id}}" name="list_id">
         <div class="w3-theme header-row">
@@ -40,4 +40,60 @@
     <br>
 </div>
 
+<div class="w3-card-4 w3-margin-top mobile-accordion" style="width: 100%;margin:auto;">
+    <form action="{{ url_for('update_items') }}" method="post">
+        <input type="hidden" value="{{list_id}}" name="list_id">
+        <div class="w3-theme header-row">
+            <h2>{{decode(wishlist[3])}} {{wishlist[2]}}</h2>
+            <button type="submit" class="w3-btn w3-theme-l1">Update Items</button>
+        </div>
+
+        <!-- Accordion Layout -->
+        <div class="accordion">
+            {% for item in list_items %}
+            <div class="accordion-item {{'checked' if item[6] == 1 else 'unchecked'}}">
+                <button class="accordion-btn" type="button">
+                    <span class="w3-text-theme">{{item[2]}}</span>
+                    <span class="accordion-icon">+</span>
+                </button>
+                <div class="accordion-body">
+                    <div class="accordion-row">
+                        <label>Bought
+                            <input type="checkbox" name="bought-{{item[0]}}" id="bought-{{item[0]}}" {% if item[6]==1
+                                %}checked{% endif %}></label>
+                    </div>
+                    <div class="accordion-row">
+                        <a href="{{item[3]}}" target="_blank">Buy it here</a>
+                    </div>
+                    <div class="accordion-row">
+                        Price: ${{item[4]}}
+                    </div>
+                    <div class="accordion-row">
+                        Description: {{item[5]}}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </form>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const accordionButtons = document.querySelectorAll(".accordion-btn");
+
+        accordionButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const content = button.nextElementSibling;
+                button.classList.toggle("active");
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        });
+    });
+</script>
 {% endblock content %}

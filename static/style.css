@@ -56,3 +56,91 @@ tbody tr:last-of-type {
   text-decoration: line-through;
   opacity: 0.7;
 }
+
+.mobile-accordion {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .desktop-table {
+    display: none;
+  }
+  .mobile-accordion {
+    display: block;
+  }
+}
+
+.accordion {
+  width: 100%;
+}
+
+.accordion-item {
+  border-bottom: 1px solid #ccc;
+}
+
+.accordion-btn {
+  background-color: #f1f1f1;
+  color: #333;
+  cursor: pointer;
+  padding: 10px;
+  text-align: left;
+  border: none;
+  outline: none;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.5s ease;
+}
+
+.accordion-btn:hover {
+  background-color: #ddd;
+}
+
+.accordion-icon {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.accordion-body {
+  display: none;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.accordion-body .accordion-row {
+  margin-bottom: 8px;
+}
+
+.accordion-body a:hover {
+  text-decoration: underline;
+}
+
+.accordion-btn.active .accordion-icon {
+  transform: rotate(45deg);
+}
+
+.accordion-row {
+  padding: 8px 12px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.accordion-row:last-child {
+  border-bottom: none;
+}
+
+.accordion-row input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.accordion-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
