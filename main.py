@@ -11,16 +11,18 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
 import mysql.connector
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = (
-    "2327c5e2393ebea60b04e62d35842dde185284f0f163c29888d110c2c4e48d2d3e70f525"
-)
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 db_config = {
-    "host": "localhost",
-    "user": "admin",
-    "password": "admin",
-    "database": "wishlist",
+    "host": os.getenv("DB_HOST"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASS"),
+    "database": os.getenv("DB_DB"),
 }
 
 
