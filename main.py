@@ -270,17 +270,20 @@ def edit(id):
                         """
                         cursor.execute(insert_query, (id, name, link, price, desc))
             else:
-                for i in range(0, length + 1):
-                    print("In else clause")
-                    name = request.form[f"item-name-{i}"]
-                    link = request.form[f"item-link-{i}"]
-                    price = request.form[f"item-price-{i}"]
-                    desc = request.form[f"item-description-{i}"]
-                    insert_query = """
-                        INSERT INTO list_items (list_id, name, url, price, description)
-                        VALUES (%s, %s, %s, %s, %s)
-                    """
-                    cursor.execute(insert_query, (id, name, link, price, desc))
+                try:
+                    for i in range(0, length + 1):
+                        print("In else clause")
+                        name = request.form[f"item-name-{i}"]
+                        link = request.form[f"item-link-{i}"]
+                        price = request.form[f"item-price-{i}"]
+                        desc = request.form[f"item-description-{i}"]
+                        insert_query = """
+                            INSERT INTO list_items (list_id, name, url, price, description)
+                            VALUES (%s, %s, %s, %s, %s)
+                        """
+                        cursor.execute(insert_query, (id, name, link, price, desc))
+                except KeyError:
+                    pass
             conn.commit()
         except mysql.connector.Error as err:
             # Handle database errors
