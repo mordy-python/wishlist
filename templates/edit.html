@@ -2,9 +2,8 @@
 {% block content %}
 
 <div class="w3-card-4 w3-margin-top responsive-form">
-    <div class="w3-theme header-row">
+    <div class="w3-container w3-theme">
         <h2>Edit {{list[1]}}</h2>
-        <button type="button" id="add-item" class="w3-btn w3-theme-l1">New Item</button>
     </div>
     <form class="w3-container w3-mobile" method="post" autocomplete="off" style="margin-top: 5px;">
         <input id="length" type="hidden" name="length" value="{{length(list_items)}}">
@@ -22,7 +21,7 @@
             </div>
         </div>
         {% for idx, item in enumerate(list_items) %}
-        <div class="row w3-card w3-padding w3-mobile">
+        <div class="row w3-card w3-padding" data-item-id="{{idx+1}}">
             <input type="hidden" name="item-id-{{idx+1}}" value="{{item[0]}}">
             <div class="form-group">
                 <label for="item-name">Item Name</label>
@@ -45,6 +44,8 @@
         <div id="new-items"></div>
         <div class="w3-margin-bottom">
             <button type="submit" class="w3-btn w3-theme">Save Changes</button>
+            <button type="button" id="add-item" class="w3-btn w3-theme">+</button>
+            <button type="button" id="remove-item" class="w3-btn w3-theme">-</button>
         </div>
     </form>
 </div>
@@ -58,6 +59,7 @@
 
         var newItemDiv = document.createElement("div");
         newItemDiv.setAttribute('class', "row w3-card w3-padding");
+        newItemDiv.setAttribute('data-item-id', newItemcount);
         newItemDiv.innerHTML = `
             <div class="form-group">
                 <label for="item-name">Item Name</label>
@@ -78,6 +80,17 @@
         `;
 
         document.getElementById("new-items").appendChild(newItemDiv);
+
+    });
+    document.getElementById("remove-item").addEventListener("click", function () {
+        var itemCount = parseInt(document.getElementById("length").value);
+        var newItemcount = itemCount - 1;
+        document.getElementById("length").value = newItemcount;
+
+        var item = document.querySelector(`[data-item-id="${itemCount}"]`);
+        console.log(item);
+        console.log(itemCount);
+        item.parentElement.removeChild(item);
     });
 </script>
 

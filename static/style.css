@@ -82,6 +82,11 @@ tbody tr:last-of-type {
   .responsive-form {
     max-width: 600px !important;
   }
+  .header-row {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10px;
+  }
 }
 
 .accordion {
