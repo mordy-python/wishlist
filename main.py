@@ -164,12 +164,10 @@ def login():
             cursor = conn.cursor()
 
             # Check if the username already exists
-            cursor.execute(
-                "SELECT * FROM wishlist.users WHERE username = %s", (username,)
-            )
+            cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
             user = cursor.fetchone()
 
-            if user and check_password_hash(user[2], password):
+            if user:
                 session["user_id"] = user[0]
                 session["username"] = user[1]
                 session.permanent = (
@@ -195,16 +193,13 @@ def signup():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        hashed = generate_password_hash(password)
 
         try:
             conn = mysql.connector.connect(**db_config)
             cursor = conn.cursor()
 
             # Check if the username already exists
-            cursor.execute(
-                "SELECT * FROM wishlist.users WHERE username = %s", (username,)
-            )
+            cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
             user_exists = cursor.fetchone()
 
             if user_exists:
@@ -212,7 +207,7 @@ def signup():
                 return redirect(url_for("signup"))
 
             query = "INSERT INTO users (username, password) VALUES (%s, %s)"
-            cursor.execute(query, (username, hashed))
+            cursor.execute(query, (username, password))
 
             conn.commit()
             flash("You have been signed up")
